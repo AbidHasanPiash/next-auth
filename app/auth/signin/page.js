@@ -1,6 +1,7 @@
 'use client'
 import { signIn } from 'next-auth/react';
 import React, { useState } from 'react'
+import AppConfig from '@/config/app'
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: 'admin@admin.com', password: 'admin'});
@@ -29,7 +30,7 @@ export default function Login() {
           <div className='xl:col-span-1 col-span-3 w-full xl:px-10 px-2 items-center justify-center'>
             <form onSubmit={handleSubmit} className='md:w-96 w-full space-y-8'>
                 <div>
-                    <h1 className='text-2xl'>Welcome to MCQ-Topper! 👋🏻</h1>
+                    <h1 className='text-2xl'>Welcome to {AppConfig.title}! 👋🏻</h1>
                     <p className='text-sm'>Please sign-in to your account and start the adventure</p>
                 </div>
                 <div className='text-sm p-3 space-y-3 bg-violet-200 text-violet-700 rounded-md'>

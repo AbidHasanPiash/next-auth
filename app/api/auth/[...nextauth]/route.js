@@ -39,7 +39,6 @@ export const authOptions = {
         const user = await res.json();
         // If no error and we have user data, return it
         if (res.ok && user) {
-          console.log('ok');
           const modifiedUser = {
             name: user?.userData?.username,
             email: user?.userData?.email,
@@ -73,7 +72,6 @@ export const authOptions = {
           accessToken: token.accessToken,
         },
       };
-      console.log(session);
       return session;
     },
   },
