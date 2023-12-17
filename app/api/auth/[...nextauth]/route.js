@@ -14,7 +14,11 @@ export const authOptions = {
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
         email: { label: "Email", type: "email", placeholder: "Email" },
-        password: { label: "Password", type: "password", placeholder: "Password" },
+        password: {
+          label: "Password",
+          type: "password",
+          placeholder: "Password",
+        },
       },
       async authorize(credentials, req) {
         // You need to provide your own logic here that takes the credentials
@@ -35,13 +39,14 @@ export const authOptions = {
         const user = await res.json();
         // If no error and we have user data, return it
         if (res.ok && user) {
-            const modifiedUser = { 
-                name: user?.userData?.username, 
-                email: user?.userData?.email, 
-                image: user?.userData?.image,
-                accessToken: user?.accessToken,
-            }
-            return modifiedUser;
+          console.log('ok');
+          const modifiedUser = {
+            name: user?.userData?.username,
+            email: user?.userData?.email,
+            image: user?.userData?.image,
+            accessToken: user?.accessToken,
+          };
+          return modifiedUser;
         }
         // Return null if user data could not be retrieved
         return null;
@@ -49,34 +54,35 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ session, token, user }){
-        // pass in user sessionToken to token
-        if (user) {
-            return{
-                ...token,
-                accessToken: user.accessToken,
-            }
-        }
-        return token
+    async jwt({ session, token, user }) {
+      // pass in user sessionToken to token
+      if (user) {
+        return {
+          ...token,
+          accessToken: user.accessToken,
+        };
+      }
+      return token;
     },
     async session({ session, token, user }) {
-        // pass in token sessionToken to session
-        session = {
-            ...session,
-            user: {
-                ...session.user,
-                accessToken: token.accessToken
-            }
-        }
-        return session;
+      // pass in token sessionToken to session
+      session = {
+        ...session,
+        user: {
+          ...session.user,
+          accessToken: token.accessToken,
+        },
+      };
+      console.log(session);
+      return session;
     },
   },
-  session:{
-    strategy: 'jwt',
+  session: {
+    strategy: "jwt",
   },
   pages: {
-    signIn: '/auth/signin',
-    error: '/auth/error', // Error code passed in query string as ?error=
+    signIn: "/auth/signin",
+    error: "/auth/error", // Error code passed in query string as ?error=
     // signOut: '/auth/signout',
     // verifyRequest: '/auth/verify-request', // (used for check email message)
     // newUser: '/auth/new-user'

@@ -4,15 +4,8 @@
 
 @layer components {
     .input-body {
-      @apply p-3 bg-transparent outline-none placeholder-transparent placeholder:select-none
-      ring-1 rounded-md valid:ring-gray-300 focus:ring-sky-500 invalid:ring-rose-500
-    }
-    .input-label {
-      @apply absolute left-1.5 -top-3 bg-gray-100 text-sm cursor-text select-none transition-all duration-200
-      peer-placeholder-shown:bg-transparent
-      peer-placeholder-shown:top-3
-      peer-placeholder-shown:left-3
-      peer-placeholder-shown:text-base
-      peer-placeholder-shown:text-gray-400
+      @apply p-2 outline-none placeholder-transparent placeholder:select-none
+      focus:shadow-lg
+      ring-1 rounded-md valid:ring-gray-300 focus:ring-violet-500 invalid:ring-rose-500
     }
   }
