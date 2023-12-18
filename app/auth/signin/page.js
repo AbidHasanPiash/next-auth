@@ -48,7 +48,8 @@ export default function Login() {
                         name="email"
                         id="email"
                         placeholder='Email'
-                        className='input-body'
+                        className='p-2 outline-none placeholder-opacity-0 placeholder:select-none
+                        focus:shadow-lg ring-1 rounded-md valid:ring-gray-300 focus:ring-violet-500 invalid:ring-rose-500'
                         value={formData.email}
                         onChange={handleChange}
                     />
@@ -64,7 +65,8 @@ export default function Login() {
                         name="password"
                         id="password"
                         placeholder='Password'
-                        className='input-body'
+                        className='p-2 outline-none placeholder-opacity-0 placeholder:select-none
+                        focus:shadow-lg ring-1 rounded-md valid:ring-gray-300 focus:ring-violet-500 invalid:ring-rose-500'
                         value={formData.password}
                         onChange={handleChange}
                     />

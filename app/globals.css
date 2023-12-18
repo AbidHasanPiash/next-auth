@@ -1,11 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@layer components {
-    .input-body {
-      @apply p-2 outline-none placeholder-transparent placeholder:select-none
-      focus:shadow-lg
-      ring-1 rounded-md valid:ring-gray-300 focus:ring-violet-500 invalid:ring-rose-500
-    }
-  }

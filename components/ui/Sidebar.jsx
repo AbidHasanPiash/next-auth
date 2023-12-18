@@ -1,666 +1,119 @@
-'use client'
-import { useState } from 'react';
-import Link from 'next/link';
+"use client"
+import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import React, { useState } from "react";
+import { BsArrowLeftCircle } from "react-icons/bs";
+import {HiFire, HiOutlineChevronDown} from 'react-icons/hi'
+import AppConfig from '@/config/app'
 
-const SidebarItem = ({ title, path, icon, children }) => {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Sidebar() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
-  return (
-    <li className="mb-2">
-      {path ? (
-        <Link href={path}>
-          <p
-            className={`flex items-center space-x-2 text-gray-600 hover:text-gray-800 cursor-pointer ${
-              isOpen ? 'font-bold' : ''
-            }`}
-          >
-            {icon && <i className={`icon ${icon} w-5 h-5`}></i>}
-            <span onClick={handleToggle}>{title}</span>
-          </p>
+  const closeSidebar = () => {
+    // Close the sidebar only if the device is a mobile
+    if (isMobileDevice()) {
+      setIsSidebarOpen(false);
+    }
+  };
+  const router = useRouter();
+  const pathname = usePathname();
+  
+  // Use an object to store the expanded state for each menu item
+  const [expandStates, setExpandStates] = React.useState({});
+  const menu = [
+    {
+      title: "Dashboard",
+      submenus: [
+        { title: "Dashboard", link: "/admin" },
+        { title: "Home Post", link: "/admin/homePost" },
+        { title: "Configuration", link: "/admin/configuration" },
+      ],
+    },
+    { title: "Administration", link: "/admin/administration" },
+    { title: "Student", link: "/admin/student" },
+    { title: "Admission", 
+      submenus: [
+        { title: "Form", link: "/admin/admission/form" },
+        { title: "Information", link: "/admin/admission/information" },
+      ],
+    },
+    { title: "File", link: "/admin/file" },
+    { title: "Blog", link: "/admin/blog" },
+    { title: "Gallery",
+      submenus: [
+        { title: "Photo", link: "/admin/gallery/photo" },
+        { title: "Video", link: "/admin/gallery/video" },
+      ],
+    },
+  ];
+
+  const RenderMenu = (m) => {
+    if (m.submenus) {
+      // Use the menu title as the key for expand state
+      const isSubmenuActive = m.submenus.some((submenu) => pathname === submenu.link);
+      const isExpanded = expandStates[m.title];
+
+      return (
+        <div key={m.title}>
+          <div onClick={() => setExpandStates((prev) => ({ ...prev, [m.title]: !prev[m.title] }))}>
+            <div className={`text-lg py-3 cursor-pointer ${isSubmenuActive ? "border-l-4 border-orange-400 px-2 bg-orange-500/20" : "px-3 hover:bg-gray-700"}`}>
+              <div className="flex items-center justify-between">
+                <span>{m.title}</span>
+                <span className={`${isExpanded && "rotate-90"} transition duration-200`}>
+                  <HiOutlineChevronDown />
+                </span>
+              </div>
+            </div>
+          </div>
+          <ul className={`${isExpanded ? 'min-h-fit' : 'h-0'} bg-gray-900 overflow-hidden transition duration-200`} key={m.title}>
+            {m.submenus.map((submenu, subIndex) => (
+              <Link key={subIndex} href={submenu.link} onClick={closeSidebar}>
+                <li
+                  className={`text-sm py-2 px-6 ${pathname === submenu.link ? "font-bold text-orange-400 bg-orange-500/10" : "hover:bg-gray-700"}`}
+                >
+                  <span>{submenu.title}</span>
+                </li>
+              </Link>
+            ))}
+          </ul>
+        </div>
+      );
+    }  else {
+      return (
+        <Link href={m.link} onClick={closeSidebar} key={m.title}>
+          <div className={`text-lg py-3 ${pathname === m.link ? "border-l-4 border-orange-400 px-2 bg-orange-500/20" : "px-3 hover:bg-gray-700"}`}>
+            <span>{m.title}</span>
+          </div>
         </Link>
-      ) : (
-        <span className="font-semibold text-gray-700">{title}</span>
-      )}
-      {children && isOpen && (
-        <ul className="ml-4">
-          {children.map((child, index) => (
-            <SidebarItem key={index} {...child} />
+      );
+    }
+  };
+  if (!pathname.includes('auth')) {
+    return (
+      <div
+        className={`${ isSidebarOpen ? "w-64 translate-x-0" : "w-0 -translate-x-96" } 
+        z-50 transition-all duration-200 flex flex-col justify-between
+        absolute md:static h-screen bg-dark-component shadow-xl`}
+      >
+        <div className="px-2 py-6 flex items-center justify-between">
+          <div className="flex items-center justify-start space-x-2">
+            <h1 className="text-3xl font-bold text-primary"><HiFire/></h1>
+            <h1 className="text-2xl font-bold">{AppConfig.title}</h1>
+          </div>
+          <button onClick={closeSidebar} className="md:hidden flex items-center justify-center p-2 rounded-full">
+            <BsArrowLeftCircle size={35} />
+          </button>
+        </div>
+        <ul className="space-y-1 pb-4 h-full overflow-y-auto select-none">
+          {menu.map((m) => (
+            RenderMenu(m)
           ))}
         </ul>
-      )}
-    </li>
-  );
-};
-
-export default function Sidebar () {
-    const navigation = [
-        {
-          title: 'Dashboards',
-          icon: 'tabler:smart-home',
-          badgeContent: 'new',
-          badgeColor: 'error',
-          children: [
-            {
-              title: 'Analytics',
-              path: '/dashboards/analytics'
-            },
-            {
-              title: 'CRM',
-              path: '/dashboards/crm'
-            },
-            {
-              title: 'eCommerce',
-              path: '/dashboards/ecommerce'
-            }
-          ]
-        },
-        {
-          sectionTitle: 'Apps & Pages'
-        },
-        {
-          title: 'Email',
-          icon: 'tabler:mail',
-          path: '/apps/email'
-        },
-        {
-          title: 'Chat',
-          icon: 'tabler:messages',
-          path: '/apps/chat'
-        },
-        {
-          title: 'Calendar',
-          icon: 'tabler:calendar',
-          path: '/apps/calendar'
-        },
-        {
-          title: 'Invoice',
-          icon: 'tabler:file-dollar',
-          children: [
-            {
-              title: 'List',
-              path: '/apps/invoice/list'
-            },
-            {
-              title: 'Preview',
-              path: '/apps/invoice/preview'
-            },
-            {
-              title: 'Edit',
-              path: '/apps/invoice/edit'
-            },
-            {
-              title: 'Add',
-              path: '/apps/invoice/add'
-            }
-          ]
-        },
-        {
-          title: 'User',
-          icon: 'tabler:user',
-          children: [
-            {
-              title: 'List',
-              path: '/apps/user/list'
-            },
-            {
-              title: 'View',
-              children: [
-                {
-                  title: 'Account',
-                  path: '/apps/user/view/account'
-                },
-                {
-                  title: 'Security',
-                  path: '/apps/user/view/security'
-                },
-                {
-                  title: 'Billing & Plans',
-                  path: '/apps/user/view/billing-plan'
-                },
-                {
-                  title: 'Notifications',
-                  path: '/apps/user/view/notification'
-                },
-                {
-                  title: 'Connection',
-                  path: '/apps/user/view/connection'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: 'Roles & Permissions',
-          icon: 'tabler:settings',
-          children: [
-            {
-              title: 'Roles',
-              path: '/apps/roles'
-            },
-            {
-              title: 'Permissions',
-              path: '/apps/permissions'
-            }
-          ]
-        },
-        {
-          title: 'Pages',
-          icon: 'tabler:file',
-          children: [
-            {
-              title: 'User Profile',
-              children: [
-                {
-                  title: 'Profile',
-                  path: '/pages/user-profile/profile'
-                },
-                {
-                  title: 'Teams',
-                  path: '/pages/user-profile/teams'
-                },
-                {
-                  title: 'Projects',
-                  path: '/pages/user-profile/projects'
-                },
-                {
-                  title: 'Connections',
-                  path: '/pages/user-profile/connections'
-                }
-              ]
-            },
-            {
-              title: 'Account Settings',
-              children: [
-                {
-                  title: 'Account',
-                  path: '/pages/account-settings/account'
-                },
-                {
-                  title: 'Security',
-                  path: '/pages/account-settings/security'
-                },
-                {
-                  title: 'Billing',
-                  path: '/pages/account-settings/billing'
-                },
-                {
-                  title: 'Notifications',
-                  path: '/pages/account-settings/notifications'
-                },
-                {
-                  title: 'Connections',
-                  path: '/pages/account-settings/connections'
-                }
-              ]
-            },
-            {
-              title: 'FAQ',
-              path: '/pages/faq'
-            },
-            {
-              title: 'Help Center',
-              path: '/pages/help-center'
-            },
-            {
-              title: 'Pricing',
-              path: '/pages/pricing'
-            },
-            {
-              title: 'Miscellaneous',
-              children: [
-                {
-                  openInNewTab: true,
-                  title: 'Coming Soon',
-                  path: '/pages/misc/coming-soon'
-                },
-                {
-                  openInNewTab: true,
-                  title: 'Under Maintenance',
-                  path: '/pages/misc/under-maintenance'
-                },
-                {
-                  openInNewTab: true,
-                  title: 'Page Not Found - 404',
-                  path: '/pages/misc/404-not-found'
-                },
-                {
-                  openInNewTab: true,
-                  title: 'Not Authorized - 401',
-                  path: '/pages/misc/401-not-authorized'
-                },
-                {
-                  openInNewTab: true,
-                  title: 'Server Error - 500',
-                  path: '/pages/misc/500-server-error'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: 'Auth Pages',
-          icon: 'tabler:lock',
-          children: [
-            {
-              title: 'Login',
-              children: [
-                {
-                  openInNewTab: true,
-                  title: 'Login v1',
-                  path: '/pages/auth/login-v1'
-                },
-                {
-                  openInNewTab: true,
-                  title: 'Login v2',
-                  path: '/pages/auth/login-v2'
-                },
-                {
-                  openInNewTab: true,
-                  title: 'Login With AppBar',
-                  path: '/pages/auth/login-with-appbar'
-                }
-              ]
-            },
-            {
-              title: 'Register',
-              children: [
-                {
-                  openInNewTab: true,
-                  title: 'Register v1',
-                  path: '/pages/auth/register-v1'
-                },
-                {
-                  openInNewTab: true,
-                  title: 'Register v2',
-                  path: '/pages/auth/register-v2'
-                },
-                {
-                  openInNewTab: true,
-                  title: 'Register Multi-Steps',
-                  path: '/pages/auth/register-multi-steps'
-                }
-              ]
-            },
-            {
-              title: 'Verify Email',
-              children: [
-                {
-                  openInNewTab: true,
-                  title: 'Verify Email v1',
-                  path: '/pages/auth/verify-email-v1'
-                },
-                {
-                  openInNewTab: true,
-                  title: 'Verify Email v2',
-                  path: '/pages/auth/verify-email-v2'
-                }
-              ]
-            },
-            {
-              title: 'Forgot Password',
-              children: [
-                {
-                  openInNewTab: true,
-                  title: 'Forgot Password v1',
-                  path: '/pages/auth/forgot-password-v1'
-                },
-                {
-                  openInNewTab: true,
-                  title: 'Forgot Password v2',
-                  path: '/pages/auth/forgot-password-v2'
-                }
-              ]
-            },
-            {
-              title: 'Reset Password',
-              children: [
-                {
-                  openInNewTab: true,
-                  title: 'Reset Password v1',
-                  path: '/pages/auth/reset-password-v1'
-                },
-                {
-                  openInNewTab: true,
-                  title: 'Reset Password v2',
-                  path: '/pages/auth/reset-password-v2'
-                }
-              ]
-            },
-            {
-              title: 'Two Steps',
-              children: [
-                {
-                  openInNewTab: true,
-                  title: 'Two Steps v1',
-                  path: '/pages/auth/two-steps-v1'
-                },
-                {
-                  openInNewTab: true,
-                  title: 'Two Steps v2',
-                  path: '/pages/auth/two-steps-v2'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: 'Wizard Examples',
-          icon: 'tabler:forms',
-          children: [
-            {
-              title: 'Checkout',
-              path: '/pages/wizard-examples/checkout'
-            },
-            {
-              title: 'Property Listing',
-              path: '/pages/wizard-examples/property-listing'
-            },
-            {
-              title: 'Create Deal',
-              path: '/pages/wizard-examples/create-deal'
-            }
-          ]
-        },
-        {
-          icon: 'tabler:square',
-          title: 'Dialog Examples',
-          path: '/pages/dialog-examples'
-        },
-        {
-          sectionTitle: 'User Interface'
-        },
-        {
-          title: 'Typography',
-          icon: 'tabler:typography',
-          path: '/ui/typography'
-        },
-        {
-          title: 'Icons',
-          path: '/ui/icons',
-          icon: 'tabler:brand-tabler'
-        },
-        {
-          
-          title: 'Cards',
-          icon: 'tabler:id',
-          children: [
-            {
-              title: 'Basic',
-              path: '/ui/cards/basic'
-            },
-            {
-              title: 'Advanced',
-              path: '/ui/cards/advanced'
-            },
-            {
-              title: 'Statistics',
-              path: '/ui/cards/statistics'
-            },
-            {
-              title: 'Widgets',
-              path: '/ui/cards/widgets'
-            },
-            {
-              title: 'Actions',
-              path: '/ui/cards/actions'
-            }
-          ]
-        },
-        {
-          badgeContent: '19',
-          title: 'Components',
-          icon: 'tabler:archive',
-          badgeColor: 'primary',
-          children: [
-            {
-              title: 'Accordion',
-              path: '/components/accordion'
-            },
-            {
-              title: 'Alerts',
-              path: '/components/alerts'
-            },
-            {
-              title: 'Avatars',
-              path: '/components/avatars'
-            },
-            {
-              title: 'Badges',
-              path: '/components/badges'
-            },
-            {
-              title: 'Buttons',
-              path: '/components/buttons'
-            },
-            {
-              title: 'Button Group',
-              path: '/components/button-group'
-            },
-            {
-              title: 'Chips',
-              path: '/components/chips'
-            },
-            {
-              title: 'Dialogs',
-              path: '/components/dialogs'
-            },
-            {
-              title: 'List',
-              path: '/components/list'
-            },
-            {
-              title: 'Menu',
-              path: '/components/menu'
-            },
-            {
-              title: 'Pagination',
-              path: '/components/pagination'
-            },
-            {
-              title: 'Progress',
-              path: '/components/progress'
-            },
-            {
-              title: 'Ratings',
-              path: '/components/ratings'
-            },
-            {
-              title: 'Snackbar',
-              path: '/components/snackbar'
-            },
-            {
-              title: 'Swiper',
-              path: '/components/swiper'
-            },
-            {
-              title: 'Tabs',
-              path: '/components/tabs'
-            },
-            {
-              title: 'Timeline',
-              path: '/components/timeline'
-            },
-            {
-              title: 'Toasts',
-              path: '/components/toast'
-            },
-            {
-              title: 'Tree View',
-              path: '/components/tree-view'
-            },
-            {
-              title: 'More',
-              path: '/components/more'
-            },
-          ]
-        },
-        {
-          sectionTitle: 'Forms & Tables'
-        },
-        {
-          title: 'Form Elements',
-          icon: 'tabler:toggle-left',
-          children: [
-            {
-              title: 'Text Field',
-              path: '/forms/form-elements/text-field'
-            },
-            {
-              title: 'Select',
-              path: '/forms/form-elements/select'
-            },
-            {
-              title: 'Checkbox',
-              path: '/forms/form-elements/checkbox'
-            },
-            {
-              title: 'Radio',
-              path: '/forms/form-elements/radio'
-            },
-            {
-              title: 'Custom Inputs',
-              path: '/forms/form-elements/custom-inputs'
-            },
-            {
-              title: 'Textarea',
-              path: '/forms/form-elements/textarea'
-            },
-            {
-              title: 'Autocomplete',
-              path: '/forms/form-elements/autocomplete'
-            },
-            {
-              title: 'Date Pickers',
-              path: '/forms/form-elements/pickers'
-            },
-            {
-              title: 'Switch',
-              path: '/forms/form-elements/switch'
-            },
-            {
-              title: 'File Uploader',
-              path: '/forms/form-elements/file-uploader'
-            },
-            {
-              title: 'Editor',
-              path: '/forms/form-elements/editor'
-            },
-            {
-              title: 'Slider',
-              path: '/forms/form-elements/slider'
-            },
-            {
-              title: 'Input Mask',
-              path: '/forms/form-elements/input-mask'
-            },
-          ]
-        },
-        {
-          icon: 'tabler:layout-navbar',
-          title: 'Form Layouts',
-          path: '/forms/form-layouts'
-        },
-        {
-          title: 'Form Validation',
-          path: '/forms/form-validation',
-          icon: 'tabler:checkbox'
-        },
-        {
-          title: 'Form Wizard',
-          path: '/forms/form-wizard',
-          icon: 'tabler:text-wrap-disabled'
-        },
-        {
-          title: 'Table',
-          icon: 'tabler:table',
-          path: '/tables/mui'
-        },
-        {
-          title: 'Mui DataGrid',
-          icon: 'tabler:layout-grid',
-          path: '/tables/data-grid'
-        },
-        {
-          sectionTitle: 'Charts & Misc'
-        },
-        {
-          title: 'Charts',
-          icon: 'tabler:chart-pie',
-          children: [
-            {
-              title: 'Apex',
-              path: '/charts/apex-charts'
-            },
-            {
-              title: 'Recharts',
-              path: '/charts/recharts'
-            },
-            {
-              title: 'ChartJS',
-              path: '/charts/chartjs'
-            }
-          ]
-        },
-        {
-          path: '/acl',
-          action: 'read',
-          subject: 'acl-page',
-          icon: 'tabler:shield',
-          title: 'Access Control'
-        },
-        {
-          title: 'Others',
-          icon: 'tabler:dots',
-          children: [
-            {
-              title: 'Menu Levels',
-              children: [
-                {
-                  title: 'Menu Level 2.1'
-                },
-                {
-                  title: 'Menu Level 2.2',
-                  children: [
-                    {
-                      title: 'Menu Level 3.1'
-                    },
-                    {
-                      title: 'Menu Level 3.2'
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              title: 'Disabled Menu',
-              disabled: true
-            },
-            {
-              title: 'Raise Support',
-              externalLink: true,
-              openInNewTab: true,
-              path: 'https://pixinvent.ticksy.com/'
-            },
-            {
-              title: 'Documentation',
-              externalLink: true,
-              openInNewTab: true,
-              path: 'https://demos.pixinvent.com/vuexy-nextjs-admin-template/documentation'
-            }
-          ]
-        }
-    ]
-  return(
-    <aside className="bg-gray-100 p-4">
-      <ul>
-        {navigation.map((item, index) => (
-          <SidebarItem key={index} {...item} />
-        ))}
-      </ul>
-    </aside>
-  )
+      </div>
+    );
+  }
 }

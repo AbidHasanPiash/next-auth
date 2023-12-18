@@ -14,11 +14,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en"> 
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-dark-bg text-dark-text`}>
         <SessionProvider>
-          <div className='flex'>
+          <div className='flex w-screen h-screen'>
             <Sidebar/>
-            <div className="flex-1 p-4 bg-gray-200">
+            <div className="flex-1 p-4 w-full h-screen overflow-y-auto">
               {children}
             </div>
           </div>
