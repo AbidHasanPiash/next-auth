@@ -2,7 +2,7 @@
 import { useSession } from "next-auth/react"
 import { fetchData } from '@/utility/fetchData'
 import React, { useEffect, useState } from 'react'
-import { HiOutlinePencilAlt, HiOutlineTrash, HiOutlineX, HiPlus } from "react-icons/hi";
+import { HiCheck, HiOutlinePencilAlt, HiOutlineTrash, HiOutlineX, HiPlus } from "react-icons/hi";
 import Modal from "@/components/ui/Modal";
 import { deleteData } from "@/utility/deleteData";
 import { postData } from "@/utility/postData";
@@ -199,9 +199,10 @@ export default function Permission() {
             <div className="flex items-center justify-center w-full pt-4">
               <button
                 type="submit"
-                className="w-10 h-10 flex items-center justify-center text-xl 
+                className="w-fit px-3 h-10 flex items-center justify-center text-xl space-x-3
                 active:bg-gray-800 active:text-gray-100 hover:text-green-500 hover:bg-gray-700 rounded-lg">
-                <span><HiPlus /></span>
+                <span>Submit </span>
+                <span><HiCheck /></span>
               </button>
             </div>
           </form>
