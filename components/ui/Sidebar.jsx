@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import React, { useState } from "react";
 import { BsArrowLeftCircle } from "react-icons/bs";
-import {HiFire, HiOutlineChevronDown} from 'react-icons/hi'
+import {HiFire, HiOutlineChevronDown, HiOutlineColorSwatch} from 'react-icons/hi'
 import AppConfig from '@/config/app'
 import MenuConfig from '@/config/menu'
 
@@ -40,22 +40,28 @@ export default function Sidebar() {
       return (
         <div key={m.title}>
           <div onClick={() => setExpandStates((prev) => ({ ...prev, [m.title]: !prev[m.title] }))}>
-            <div className={`text-lg py-3 cursor-pointer ${isSubmenuActive ? "border-l-4 border-orange-400 px-2 bg-orange-500/20" : "px-3 hover:bg-gray-700"}`}>
+            <div className={`p-2 my-1 rounded-lg cursor-pointer ${isSubmenuActive ? "text-gray-200 bg-gray-700" : "hover:bg-gray-700"}`}>
               <div className="flex items-center justify-between">
-                <span>{m.title}</span>
+                <p className="flex items-center justify-start space-x-2">
+                  <span><HiOutlineColorSwatch /></span>
+                  <span>{m.title}</span>
+                </p>
                 <span className={`${isExpanded && "rotate-90"} transition duration-200`}>
                   <HiOutlineChevronDown />
                 </span>
               </div>
             </div>
           </div>
-          <ul className={`${isExpanded ? 'min-h-fit' : 'h-0'} bg-gray-900 overflow-hidden transition duration-200`} key={m.title}>
+          <ul className={`${isExpanded ? 'min-h-fit' : 'h-0'} overflow-hidden transition duration-200`} key={m.title}>
             {m.submenus.map((submenu, subIndex) => (
               <Link key={subIndex} href={submenu.link} onClick={closeSidebar}>
                 <li
-                  className={`text-sm py-2 px-6 ${pathname === submenu.link ? "font-bold text-orange-400 bg-orange-500/10" : "hover:bg-gray-700"}`}
+                  className={`text-sm p-2 ${pathname === submenu.link ? "font-bold text-gray-200 bg-primary" : "hover:bg-gray-700"} rounded-lg my-1`}
                 >
-                  <span>{submenu.title}</span>
+                  <p className="flex items-center justify-start space-x-2">
+                    <span>o</span>
+                    <span>{submenu.title}</span>
+                  </p>
                 </li>
               </Link>
             ))}
@@ -65,8 +71,11 @@ export default function Sidebar() {
     }  else {
       return (
         <Link href={m.link} onClick={closeSidebar} key={m.title}>
-          <div className={`text-lg py-3 ${pathname === m.link ? "border-l-4 border-orange-400 px-2 bg-orange-500/20" : "px-3 hover:bg-gray-700"}`}>
-            <span>{m.title}</span>
+          <div className={`p-2 my-1 rounded-lg ${pathname === m.link ? "font-bold text-gray-200 bg-primary" : "hover:bg-gray-700"}`}>
+            <p className="flex items-center justify-start space-x-2">
+              <span><HiOutlineColorSwatch /></span>
+              <span>{m.title}</span>
+            </p>
           </div>
         </Link>
       );
@@ -76,10 +85,10 @@ export default function Sidebar() {
     return (
       <div
         className={`${ isSidebarOpen ? "w-[300px] translate-x-0" : "w-0 -translate-x-96" } 
-        z-50 transition-all duration-200 flex flex-col justify-between
+        z-50 p-4 transition-all duration-200 flex flex-col justify-between
         absolute md:static h-screen bg-dark-component shadow-xl`}
       >
-        <div className="px-2 py-6 flex items-center justify-between">
+        <div className="flex pb-4 items-center justify-between">
           <div className="flex items-center justify-start space-x-2">
             <h1 className="text-3xl font-bold text-primary"><HiFire/></h1>
             <h1 className="text-xl font-bold">{AppConfig.title}</h1>
@@ -88,7 +97,7 @@ export default function Sidebar() {
             <BsArrowLeftCircle size={35} />
           </button>
         </div>
-        <ul className="space-y-1 pb-4 h-full overflow-y-auto select-none">
+        <ul className="h-full overflow-y-auto select-none">
           {menu.map((m) => (
             RenderMenu(m)
           ))}
