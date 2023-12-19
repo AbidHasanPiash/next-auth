@@ -1,11 +1,13 @@
 export async function fetchData(apiEndpoint, session) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const token = session?.user?.accessToken;
+
     const response = await fetch(baseUrl + apiEndpoint, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization' : `Bearer ${session?.user?.accessToken}`
+        'Authorization' : `Bearer ${token}`
       },
     });
 
