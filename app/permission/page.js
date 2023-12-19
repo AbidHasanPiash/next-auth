@@ -162,7 +162,7 @@ export default function Permission() {
                 <input
                   type="text"
                   name="perm_name"
-                  value={formData.perm_name}
+                  value={formData?.perm_name}
                   onChange={handleInputChange}
                   required
                   className="bg-dark-bg py-2 px-1 rounded outline-none border border-slate-600 focus:ring-1 ring-primary"
@@ -174,14 +174,13 @@ export default function Permission() {
                   <input
                     type="checkbox"
                     name="isactive"
-                    value={formData.isactive || false}
+                    checked={formData.isactive || false}
                     onChange={handleInputChange}
-                    required
                     className="sr-only peer"
                   />
                   <span 
-                    className="absolute left-1 top-1 w-4 h-4 rounded-full transition-all duration-200
-                    bg-gray-300 peer-checked:bg-primary peer-checked:left-7"
+                    className={`${formData?.isactive ? 'left-7 bg-primary' : 'left-1 bg-gray-300'}
+                    absolute top-1 w-4 h-4 rounded-full transition-all duration-200`}
                   />
                 </div>
               </label>
@@ -190,7 +189,7 @@ export default function Permission() {
                 <textarea
                   type="text"
                   name="perm_desc"
-                  value={formData.perm_desc}
+                  value={formData?.perm_desc}
                   onChange={handleInputChange}
                   required
                   className="bg-dark-bg py-2 px-1 rounded outline-none border border-slate-600 focus:ring-1 ring-primary"
