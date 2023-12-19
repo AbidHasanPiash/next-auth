@@ -43,7 +43,7 @@ export default function Sidebar() {
             <div className={`px-4 py-2 my-1 rounded-lg cursor-pointer ${isSubmenuActive ? "text-gray-200 bg-gray-700" : "hover:bg-gray-700"}`}>
               <div className="flex items-center justify-between">
                 <p className="flex items-center justify-start space-x-2">
-                  <span><HiOutlineColorSwatch /></span>
+                  <span className="text-lg"><HiOutlineColorSwatch /></span>
                   <span>{m.title}</span>
                 </p>
                 <span className={`${isExpanded && "rotate-90"} transition duration-200`}>
@@ -73,7 +73,7 @@ export default function Sidebar() {
         <Link href={m.link} onClick={closeSidebar} key={m.title}>
           <div className={`px-4 py-2 my-1 rounded-lg ${pathname === m.link ? "font-bold text-gray-200 bg-primary" : "hover:bg-gray-700"}`}>
             <p className="flex items-center justify-start space-x-2">
-              <span><HiOutlineColorSwatch /></span>
+              <span className="text-lg"><HiOutlineColorSwatch /></span>
               <span>{m.title}</span>
             </p>
           </div>
@@ -86,7 +86,7 @@ export default function Sidebar() {
       <aside
         className={`${ isSidebarOpen ? "w-[300px] translate-x-0" : "w-0 -translate-x-96" } 
         z-50 p-4 transition-all duration-200 flex flex-col justify-between
-        absolute md:static h-screen bg-dark-component shadow-xl`}
+        absolute md:static h-screen bg-dark-component shadow-xl text-sm`}
       >
         <div className="flex pb-4 items-center justify-between">
           <div className="flex items-center justify-start space-x-2">
