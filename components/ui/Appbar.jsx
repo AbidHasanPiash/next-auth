@@ -1,8 +1,8 @@
 'use client'
-import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
 import React, { useState } from 'react'
+import { useSession, signOut } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 import Dropdown from './Dropdown';
 
 export default function AppBar() {
@@ -50,6 +50,7 @@ export default function AppBar() {
                         isOpen={isDropdownOpen}
                         onClose={handleAction}
                         options={options}
+                        user={session.user}
                         position="right"
                       />
                 </div>
