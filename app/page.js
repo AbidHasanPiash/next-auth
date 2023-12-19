@@ -1,10 +1,8 @@
 'use client'
 import SignOut from "@/components/auth/SignOut";
-import { useSession, getSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 
 export default function Home() {
-  // const session = await getServerSession();
-  // console.log('Session from page: ',session);
   const { data: session, status } = useSession()
 
   if (status === "loading") {

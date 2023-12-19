@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
         <SessionProvider>
           <div className='flex w-screen h-screen'>
             <Sidebar/>
-            <div className="flex-1 p-4 w-full h-screen overflow-y-auto">
+            <div className="w-full h-screen overflow-y-auto">
               {children}
             </div>
           </div>

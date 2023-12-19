@@ -22,10 +22,10 @@ export default function Login() {
     })
   }
   return (
-    <div className='h-screen flex items-center justify-center text-gray-700'>
+    <div className='h-screen flex items-center justify-center'>
       <div className='grid grid-cols-3 gap-10 items-center justify-center w-full h-full p-8'>
-          <div className='hidden xl:col-span-2 w-full h-full xl:flex items-center justify-center bg-violet-50 rounded-xl'>
-              <img src="/images/pages/auth-v2-login-illustration-bordered-light.png" alt="login image" className='w-[400px]' />
+          <div className='hidden xl:col-span-2 w-full h-full xl:flex items-center justify-center rounded-xl bg-dark-component'>
+              <img src="/images/pages/auth-v2-login-illustration-bordered-dark.png" alt="login image" className='w-[400px]' />
           </div>
           <div className='xl:col-span-1 col-span-3 w-full xl:px-10 px-2 items-center justify-center'>
             <form onSubmit={handleSubmit} className='md:w-96 w-full space-y-8'>

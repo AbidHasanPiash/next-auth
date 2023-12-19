@@ -1,5 +1,5 @@
 "use client"
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import React, { useState } from "react";
 import { BsArrowLeftCircle } from "react-icons/bs";
@@ -19,7 +19,6 @@ export default function Sidebar() {
       setIsSidebarOpen(false);
     }
   };
-  const router = useRouter();
   const pathname = usePathname();
   
   // Use an object to store the expanded state for each menu item
@@ -95,14 +94,14 @@ export default function Sidebar() {
   if (!pathname.includes('auth')) {
     return (
       <div
-        className={`${ isSidebarOpen ? "w-64 translate-x-0" : "w-0 -translate-x-96" } 
+        className={`${ isSidebarOpen ? "w-[300px] translate-x-0" : "w-0 -translate-x-96" } 
         z-50 transition-all duration-200 flex flex-col justify-between
         absolute md:static h-screen bg-dark-component shadow-xl`}
       >
         <div className="px-2 py-6 flex items-center justify-between">
           <div className="flex items-center justify-start space-x-2">
             <h1 className="text-3xl font-bold text-primary"><HiFire/></h1>
-            <h1 className="text-2xl font-bold">{AppConfig.title}</h1>
+            <h1 className="text-xl font-bold">{AppConfig.title}</h1>
           </div>
           <button onClick={closeSidebar} className="md:hidden flex items-center justify-center p-2 rounded-full">
             <BsArrowLeftCircle size={35} />
