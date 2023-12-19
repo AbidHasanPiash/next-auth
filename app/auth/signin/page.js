@@ -23,7 +23,7 @@ export default function Login() {
   }
   return (
     <div className='h-screen flex items-center justify-center'>
-      <div className='grid grid-cols-3 gap-10 items-center justify-center w-full h-full p-8'>
+      <div className='grid grid-cols-3 gap-8 items-center justify-center w-full h-full py-8'>
           <div className='hidden xl:col-span-2 w-full h-full xl:flex items-center justify-center rounded-xl bg-dark-component'>
               <img src="/images/pages/auth-v2-login-illustration-bordered-dark.png" alt="login image" className='w-[400px]' />
           </div>

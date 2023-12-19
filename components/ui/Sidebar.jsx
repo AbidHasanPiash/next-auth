@@ -83,7 +83,7 @@ export default function Sidebar() {
   };
   if (!pathname.includes('auth')) {
     return (
-      <div
+      <aside
         className={`${ isSidebarOpen ? "w-[300px] translate-x-0" : "w-0 -translate-x-96" } 
         z-50 p-4 transition-all duration-200 flex flex-col justify-between
         absolute md:static h-screen bg-dark-component shadow-xl`}
@@ -102,7 +102,7 @@ export default function Sidebar() {
             RenderMenu(m)
           ))}
         </ul>
-      </div>
+      </aside>
     );
   }
 }
