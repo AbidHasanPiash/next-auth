@@ -5,9 +5,20 @@ import React, { useState } from "react";
 import { BsArrowLeftCircle } from "react-icons/bs";
 import {HiFire, HiOutlineChevronDown} from 'react-icons/hi'
 import AppConfig from '@/config/app'
+import MenuConfig from '@/config/menu'
 
 export default function Sidebar() {
+  const menu = MenuConfig;
+  const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  // Use an object to store the expanded state for each menu item
+  const [expandStates, setExpandStates] = useState({});
+  
+  // Function to check if the device is a mobile
+  const isMobileDevice = () => {
+    const mediaQuery = window.matchMedia('(max-width: 768px)'); // Adjust the width as needed
+    return mediaQuery.matches;
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -19,36 +30,6 @@ export default function Sidebar() {
       setIsSidebarOpen(false);
     }
   };
-  const pathname = usePathname();
-  
-  // Use an object to store the expanded state for each menu item
-  const [expandStates, setExpandStates] = React.useState({});
-  const menu = [
-    {
-      title: "Dashboard",
-      submenus: [
-        { title: "Dashboard", link: "/admin" },
-        { title: "Home Post", link: "/admin/homePost" },
-        { title: "Configuration", link: "/admin/configuration" },
-      ],
-    },
-    { title: "Administration", link: "/admin/administration" },
-    { title: "Student", link: "/admin/student" },
-    { title: "Admission", 
-      submenus: [
-        { title: "Form", link: "/admin/admission/form" },
-        { title: "Information", link: "/admin/admission/information" },
-      ],
-    },
-    { title: "File", link: "/admin/file" },
-    { title: "Blog", link: "/admin/blog" },
-    { title: "Gallery",
-      submenus: [
-        { title: "Photo", link: "/admin/gallery/photo" },
-        { title: "Video", link: "/admin/gallery/video" },
-      ],
-    },
-  ];
 
   const RenderMenu = (m) => {
     if (m.submenus) {
