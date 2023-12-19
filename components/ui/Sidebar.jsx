@@ -40,7 +40,7 @@ export default function Sidebar() {
       return (
         <div key={m.title}>
           <div onClick={() => setExpandStates((prev) => ({ ...prev, [m.title]: !prev[m.title] }))}>
-            <div className={`p-2 my-1 rounded-lg cursor-pointer ${isSubmenuActive ? "text-gray-200 bg-gray-700" : "hover:bg-gray-700"}`}>
+            <div className={`px-4 py-2 my-1 rounded-lg cursor-pointer ${isSubmenuActive ? "text-gray-200 bg-gray-700" : "hover:bg-gray-700"}`}>
               <div className="flex items-center justify-between">
                 <p className="flex items-center justify-start space-x-2">
                   <span><HiOutlineColorSwatch /></span>
@@ -56,9 +56,9 @@ export default function Sidebar() {
             {m.submenus.map((submenu, subIndex) => (
               <Link key={subIndex} href={submenu.link} onClick={closeSidebar}>
                 <li
-                  className={`text-sm p-2 ${pathname === submenu.link ? "font-bold text-gray-200 bg-primary" : "hover:bg-gray-700"} rounded-lg my-1`}
+                  className={`text-sm px-4 py-2 my-1 rounded-lg ${pathname === submenu.link ? "font-bold text-gray-200 bg-primary" : "hover:bg-gray-700"}`}
                 >
-                  <p className="flex items-center justify-start space-x-2">
+                  <p className="flex items-center justify-start space-x-4">
                     <span>o</span>
                     <span>{submenu.title}</span>
                   </p>
@@ -71,7 +71,7 @@ export default function Sidebar() {
     }  else {
       return (
         <Link href={m.link} onClick={closeSidebar} key={m.title}>
-          <div className={`p-2 my-1 rounded-lg ${pathname === m.link ? "font-bold text-gray-200 bg-primary" : "hover:bg-gray-700"}`}>
+          <div className={`px-4 py-2 my-1 rounded-lg ${pathname === m.link ? "font-bold text-gray-200 bg-primary" : "hover:bg-gray-700"}`}>
             <p className="flex items-center justify-start space-x-2">
               <span><HiOutlineColorSwatch /></span>
               <span>{m.title}</span>
