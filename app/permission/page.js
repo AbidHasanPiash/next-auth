@@ -4,15 +4,18 @@ import { fetchData } from '@/utility/fetchData'
 import React, { useEffect, useState } from 'react'
 import { HiOutlinePencilAlt, HiOutlineTrash, HiOutlineX, HiPlus } from "react-icons/hi";
 import Modal from "@/components/ui/Modal";
+import { deleteData } from "@/utility/deleteData";
+import { postData } from "@/utility/postData";
+import { updateData } from "@/utility/updateData";
 
 export default function Permission() {
   const { data: session } = useSession();
   const [permission, setPermission] = useState(null);
   
   const [modalState, setModalState] = useState({ isCreating: false, isEditing: false, });
-  const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({});
 
   const handleEditClick = (data) => {
     setFormData(data);
@@ -24,8 +27,8 @@ export default function Permission() {
     if (confirmed) {
       setLoading(true);
       try {
-        await deleteData(`api/v1/blog/`, id);
-        fetchDataFromAPI(`api/v1/blog`, setApiBlogData);
+        await deleteData(`/permissions/`, id, session);
+        fetchPermissionData();
       } catch (err) {
         setError("Error deleting student");
         console.error(err);
@@ -36,20 +39,15 @@ export default function Permission() {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    if (!formData || !session?.user?.accessToken) {
+      return null
+    }
     setLoading(true);
-
     try {
-      const prepData = new FormData();
-
-      prepData.append("title", formData.title);
-      prepData.append("category", formData.category);
-      prepData.append("description", formData.description);
-      prepData.append("blogImage", formData.blogImage);
-
       modalState.isCreating
-        ? await postData("api/v1/blog", prepData, true)
-        : await updateData(`api/v1/blog/`, formData.id, prepData, true);
-      fetchDataFromAPI(`api/v1/blog`, setApiBlogData);
+        ? await postData("/permissions", formData, session)
+        : await updateData(`/permissions/`, formData._id, formData, session);
+        fetchPermissionData();
     } catch (err) {
       console.error("An error occurred:", err.message);
     } finally {
@@ -60,13 +58,18 @@ export default function Permission() {
   };
 
   const handleInputChange = (event) => {
-    const { name, value, files } = event.target;
-
+    const { name, value, type, checked } = event.target;
+  
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: files ? files[0] : value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
+
+  const handleModalCLose = () => {
+    setModalState({ isCreating: false, isEditing: false });
+    setFormData({})
+  }
 
   // Create an asynchronous function to fetch the data
   const fetchPermissionData = async () => {
@@ -127,7 +130,7 @@ export default function Permission() {
                   <span><HiOutlinePencilAlt /></span>
                 </button>
                 <button
-                  onClick={() => handleDeleteClick(p.id)}
+                  onClick={() => handleDeleteClick(p._id)}
                   title="Delete"
                   className="w-10 h-10 flex items-center justify-center rounded-lg
                 active:bg-gray-800 active:text-gray-100 hover:text-rose-500 hover:bg-gray-700">
@@ -138,7 +141,6 @@ export default function Permission() {
           ))}
         </tbody>
       </table>
-
       {/* Create and Edit modal */}
       <Modal isOpen={modalState.isCreating || modalState.isEditing}>
         <div className="flex flex-col items-center justify-center space-y-8 py-4">
@@ -146,7 +148,7 @@ export default function Permission() {
             <h1>{modalState.isCreating ? 'Create new permission' : 'Edit permission'}</h1>
             <button
               type="button"
-              onClick={() => setModalState({ isCreating: false, isEditing: false })}
+              onClick={handleModalCLose}
               className="w-10 h-10 text-lg flex items-center justify-center rounded-lg
               active:bg-gray-800 active:text-gray-100 hover:text-rose-500 hover:bg-gray-700"
             >
@@ -172,7 +174,7 @@ export default function Permission() {
                   <input
                     type="checkbox"
                     name="isactive"
-                    value={formData.isactive}
+                    value={formData.isactive || false}
                     onChange={handleInputChange}
                     required
                     className="sr-only peer"
@@ -194,6 +196,14 @@ export default function Permission() {
                   className="bg-dark-bg py-2 px-1 rounded outline-none border border-slate-600 focus:ring-1 ring-primary"
                 />
               </label>
+            </div>
+            <div className="flex items-center justify-center w-full pt-4">
+              <button
+                type="submit"
+                className="w-10 h-10 flex items-center justify-center text-xl 
+                active:bg-gray-800 active:text-gray-100 hover:text-green-500 hover:bg-gray-700 rounded-lg">
+                <span><HiPlus /></span>
+              </button>
             </div>
           </form>
         </div>
